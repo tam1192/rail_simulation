@@ -8,6 +8,6 @@ import topLevelAwait from "vite-plugin-top-level-await";
 export default defineConfig({
     plugins: [vue(), tailwindcss(), wasm(), topLevelAwait()],
     build: {
-        target: 'esnext'
-    }
+        target: "esnext",
+    },
 });
