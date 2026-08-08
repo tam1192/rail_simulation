@@ -40,9 +40,9 @@ export function useTrack() {
     }
 
     // 後方台車の距離を二分探索（弦長補正）
-    function findRearDistance(dFront: number, L: number): number {
+    function findRearDistance(dFront: number, length: number): number {
         const pFront = getPointAtDistance(dFront)
-        let low = Math.max(0, dFront - L * 1.8)
+        let low = Math.max(0, dFront - length * 1.8)
         let high = dFront
 
         for (let iter = 0; iter < 15; iter++) {
@@ -50,7 +50,7 @@ export function useTrack() {
             const pMid = getPointAtDistance(mid)
             const dist = Math.hypot(pFront.x - pMid.x, pFront.y - pMid.y)
 
-            if (dist < L) {
+            if (dist < length) {
                 high = mid
             } else {
                 low = mid
