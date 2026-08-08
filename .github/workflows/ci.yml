@@ -1,0 +1,104 @@
+name: CI
+
+on:
+    pull_request:
+
+env:
+    NODE_VERSION: 24
+
+jobs:
+    # ----------------------------------------------------
+    # 1. 最初に node_modules を準備する Job
+    # ----------------------------------------------------
+    setup:
+        name: Setup Dependencies
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            - name: Cache node_modules
+              id: node-modules-cache
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+            - name: Install dependencies
+              if: steps.node-modules-cache.outputs.cache-hit != 'true'
+              run: npm ci
+
+    # ----------------------------------------------------
+    # 2. setup に依存する Job群 (setup 完了後に「並列」で動く)
+    # ----------------------------------------------------
+    lint:
+        name: ESLint
+        needs: setup # <-- setup Job の成功に依存
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            # キャッシュから node_modules を復元 (npm ci は実行しない)
+            - uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm run check
+
+    format:
+        name: Prettier
+        needs: setup # <-- setup 完了後に並列実行
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: "lts/*"
+
+            - uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm run fmt:check
+
+    type-check:
+        name: TypeScript
+        needs: setup # <-- setup Job の成功に依存
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            - uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm run type-check
+
+    build:
+        name: Build
+        needs: [lint, type-check, format] # <-- lint と type-check 両方が成功した時だけ実行
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            - uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+            - run: npm run build
