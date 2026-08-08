@@ -1,0 +1,16 @@
+[package]
+name = "rail_simulation_wasm"
+version = "0.1.0"
+authors = ["nikki9750 <tamkame123@outlook.com>"]
+description = "A sample project with wasm-pack"
+license = "MIT/Apache-2.0"
+repository = "https://github.com/yourgithubusername/hello-wasm"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+anyhow = "1.0.104"
+wasm-bindgen = "0.2"
+web-sys = { version = "0.3.104", features = ["CanvasRenderingContext2d", "Element", "HtmlCanvasElement", "HtmlElement", "std"] }
