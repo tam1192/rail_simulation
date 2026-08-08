@@ -88,7 +88,7 @@ jobs:
 
     build:
         name: Build
-        needs: [lint, type-check] # <-- lint と type-check 両方が成功した時だけ実行
+        needs: [lint, type-check, format] # <-- lint と type-check 両方が成功した時だけ実行
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
