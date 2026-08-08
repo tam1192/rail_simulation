@@ -104,6 +104,6 @@ jobs:
             - name: Install wasm-pack
               uses: taiki-e/install-action@v2
               with:
-                tool: wasm-pack
+                  tool: wasm-pack
 
             - run: npm run build
