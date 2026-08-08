@@ -73,6 +73,11 @@ jobs:
               with:
                   tool: wasm-pack
 
+            - uses: actions/cache@v4
+              with:
+                  path: wasm/target
+                  key: ${{ runner.os }}-rust-target
+
             - run: npm run build --if-present -- --base "${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}"
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
