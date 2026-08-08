@@ -14,6 +14,7 @@ export default tseslint.config(
             "public/**",
             "coverage/**",
             "eslint.config.ts",
+            "wasm/**",
         ],
     },
 

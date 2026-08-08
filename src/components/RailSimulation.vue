@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from "vue";
-import type { SimParams, DebugInfo } from "../types/track";
-import type { Point, GraphicsEngine } from "../core/graphics/GraphicsEngine";
-import { CanvasGraphicsEngine } from "../core/graphics/CanvasGraphicsEngine";
-import { useTrack } from "../composables/useTrack";
-import { renderTrackSim } from "../utils/trackRenderer";
+import init, { RailSimulation, DebugInfo } from "../../wasm/pkg";
 
-const { trackNodes, totalTrackLength, getPointAtDistance, findRearDistance } =
-    useTrack();
+type SimParams = {
+    useCorrection: boolean;
+    speed: number;
+    bogiePitch: number;
+};
+
+const wasmReady = ref(false);
+const engine = ref<RailSimulation | null>(null);
+const debugInfo = ref<DebugInfo | null>(null);
 
 // パラメータ
 const params = reactive<SimParams>({
@@ -16,64 +19,35 @@ const params = reactive<SimParams>({
     bogiePitch: 90,
 });
 
-const debugInfo = reactive<DebugInfo>({
-    calculatedChordLength: 0,
-});
-
 // DOM参照
 const canvasRef = ref<HTMLCanvasElement | null>(null);
-
-// 描画関連（Vueのリアクティビティに含めず、純粋な変数として保持して軽量化）
-let ctx: CanvasRenderingContext2D | null = null;
-let engine: GraphicsEngine | null = null;
 let animationFrameId: number | null = null;
-let dFront = 120;
-
-function update() {
-    dFront += params.speed;
-    if (dFront > totalTrackLength - 10) {
-        dFront = 80; // ループ
-    }
-}
 
 function loop() {
-    if (ctx && engine) {
-        // 位置更新
-        update();
-
-        // 台車位置計算
-        const pFront = getPointAtDistance(dFront);
-        let pRear: Point;
-
-        if (params.useCorrection) {
-            const dRear = findRearDistance(dFront, params.bogiePitch);
-            pRear = getPointAtDistance(dRear);
-        } else {
-            pRear = getPointAtDistance(dFront - params.bogiePitch);
-        }
-
-        // デバッグ情報更新
-        debugInfo.calculatedChordLength = Math.hypot(
-            pFront.x - pRear.x,
-            pFront.y - pRear.y
+    if (engine.value) {
+        debugInfo.value = engine.value.execute(
+            params.useCorrection,
+            params.speed,
+            params.bogiePitch
         );
-
-        // 画面クリア＆描画実行
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        renderTrackSim({ engine: engine, trackNodes, pFront, pRear, params });
     }
 
     animationFrameId = requestAnimationFrame(loop);
 }
 
-onMounted(() => {
-    const canvas = canvasRef.value;
-    if (canvas) {
-        ctx = canvas.getContext("2d");
-        if (ctx) {
-            engine = new CanvasGraphicsEngine(ctx);
-            loop();
+onMounted(async () => {
+    try {
+        await init();
+        wasmReady.value = true;
+
+        const canvas = canvasRef.value;
+        if (canvas) {
+            engine.value = new RailSimulation(canvas);
         }
+        loop();
+    } catch (error) {
+        console.error(error);
+        wasmReady.value = false;
     }
 });
 
@@ -154,7 +128,7 @@ onUnmounted(() => {
                     >実際の弦長:
                     <strong class="text-emerald-400 font-bold"
                         >{{
-                            debugInfo.calculatedChordLength.toFixed(2)
+                            debugInfo?.calculated_chord_length.toFixed(2)
                         }}
                         px</strong
                     ></span
