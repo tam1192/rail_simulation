@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* 役割に応じたカラー名を登録 */
+@theme {
+    --color-brand: var(--color-brand);
+    --color-surface-primary: var(--color-bg-primary);
+    --color-surface-secondary: var(--color-bg-secondary);
+    --color-content-main: var(--color-text-main);
+    --color-content-muted: var(--color-text-muted);
+}
+
+/* ライトモード / ダークモードの色定義 */
+:root {
+    --color-bg-primary: #ffffff; /* メイン背景 (白) */
+    --color-bg-secondary: #f3f4f6; /* サブ背景・ホバー用 (薄グレー) */
+    --color-text-main: #111827; /* メイン文字色 (ほぼ黒) */
+    --color-text-muted: #6b7280; /* サブ文字色 (グレー) */
+    --color-brand: #4f46e5; /* ブランドカラー (インディゴ) */
+}
+
+.dark {
+    --color-bg-primary: #0f172a; /* メイン背景 (濃いネイビー/グレー) */
+    --color-bg-secondary: #1e293b; /* サブ背景・ホバー用 */
+    --color-text-main: #f8fafc; /* メイン文字色 (ほぼ白) */
+    --color-text-muted: #94a3b8; /* サブ文字色 */
+    --color-brand: #818cf8; /* ブランドカラー (少し明るいインディゴ) */
+}
