@@ -1,0 +1,50 @@
+---
+description: Tailwind CSS and UI component best practices for modern web applications
+globs: "**/*.vue,**/*.css,tailwind.config.js,src/main.css"
+alwaysApply: false
+---
+# Tailwind CSS Best Practices
+
+## Project Setup
+- Prefer existing `@theme` tokens in `src/main.css` over new hex in templates
+- Configure theme extension properly
+- Use Tailwind v4 Vite plugin already in this repo
+- Use semantic color names (`brand`, `surface-*`, `content-*`)
+- Implement dark mode via the `.dark` class, not ad-hoc palettes
+
+## Component Styling
+- Use utility classes over custom CSS
+- Group related utilities with @apply when needed
+- Use proper responsive design utilities
+- Use proper state variants
+- Keep component styles consistent
+
+## Layout
+- Use Flexbox and Grid utilities effectively
+- Implement proper spacing system
+- Implement proper responsive breakpoints
+- Use proper padding and margin utilities
+- Implement proper alignment utilities
+
+## Typography
+- Use proper font size utilities
+- Implement proper line height
+- Use proper font weight utilities
+- Use proper text alignment
+
+## Colors
+- Use semantic color naming
+- Implement proper color contrast
+- Use opacity utilities effectively
+- Use proper hover states
+- Do not introduce shadcn/ui unless the user asks
+
+## Responsive Design
+- Use mobile-first approach
+- Implement proper breakpoints
+- Handle different screen sizes properly
+- Implement proper responsive spacing
+
+## Performance
+- Minimize custom CSS
+- Optimize for production

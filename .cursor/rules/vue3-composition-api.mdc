@@ -1,0 +1,18 @@
+---
+description: Cursor rules for Vue 3 development with Composition API integration.
+globs: "**/*.vue,src/**/*.ts"
+alwaysApply: false
+---
+
+# Vue 3 Composition API
+
+- Use `<script setup lang="ts">` for component logic
+- Use `ref` and `reactive` for reactive state
+- Use `computed()` for derived values
+- Use `watch` / `watchEffect` for side effects
+- Use lifecycle hooks (`onMounted`, `onUnmounted`, …)
+- Use `provide` / `inject` only when a composable is not enough
+- Define props and emits explicitly
+- Use Vue Router lazy `import()` for pages
+- Use Vite for dev and build
+- Follow the Vue 3 style guide and naming conventions

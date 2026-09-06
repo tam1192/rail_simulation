@@ -1,0 +1,31 @@
+---
+description: Cursor rules for Git development with conventional commit messages integration.
+globs: "**/*"
+alwaysApply: false
+---
+Use the Conventional Commit Messages specification to generate commit messages
+
+The commit message should be structured as follows:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+The commit contains the following structural elements, to communicate intent:
+
+- `fix`: patches a bug (PATCH in SemVer)
+- `feat`: introduces a new feature (MINOR in SemVer)
+- `BREAKING CHANGE`: footer, or `!` after type/scope (MAJOR in SemVer)
+- Other types: `build`, `chore`, `ci`, `docs`, `style`, `refactor`, `perf`, `test`
+
+A scope MAY be provided after a type, e.g. `feat(wasm):`.
+
+A description MUST immediately follow the colon and space after the type/scope prefix.
+
+A longer commit body MAY be provided after one blank line.
+
+Breaking changes MUST be indicated with `!` before `:` or a `BREAKING CHANGE:` footer.

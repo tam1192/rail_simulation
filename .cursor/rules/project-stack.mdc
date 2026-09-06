@@ -1,0 +1,18 @@
+---
+description: Local stack and architecture overlay. Takes precedence over generic awesome-cursorrules catalog files.
+alwaysApply: true
+---
+
+# rail_simulation stack
+
+- Vite + Vue 3 (`<script setup>`) + TypeScript + Tailwind v4 + Rust compiled with `wasm-pack`
+- Vue is the delivery layer: params, playback, status text, routing, theme
+- Domain and simulation steps live in `wasm/` (Rust). Do not reimplement them in Vue
+- Draw through `GraphicsEngine`; do not add new Canvas 2D calls inside use-case structs
+- Theme tokens (`brand`, `surface-*`, `content-*`) for UI chrome. Algorithm pointer colors may stay explicit
+- Pages go in `src/pages/`, composables in `src/composables/`, routes in `src/router/`
+- Add a simulation as a WASM type + a Vue page + a router entry. Do not create a new app shell
+
+## Ignore from catalog rules unless the user asks
+
+Pinia, Nuxt, DaisyUI, shadcn/ui, VueUse, Solana/Anchor, Next.js
