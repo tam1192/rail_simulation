@@ -15,15 +15,15 @@ Stack: Vite + Vue 3 (Composition API) + TypeScript + Tailwind v4 + Rust WASM.
 
 Already installed under `.cursor/rules/` (see [SOURCES.md](SOURCES.md)):
 
-| File | Role |
-|---|---|
-| `project-stack.mdc` | Local overlay. Wins over generic catalog advice. |
-| `vue.mdc` | Vue 3 patterns |
-| `vue3-composition-api.mdc` | Composition API / Vite |
-| `rust-general.mdc` | Idiomatic Rust (not Solana) |
-| `tailwind.mdc` | Utility CSS |
-| `clean-code.mdc` | Naming, SRP, DRY |
-| `git-conventional-commits.mdc` | Conventional Commits |
+| File                           | Role                                             |
+| ------------------------------ | ------------------------------------------------ |
+| `project-stack.mdc`            | Local overlay. Wins over generic catalog advice. |
+| `vue.mdc`                      | Vue 3 patterns                                   |
+| `vue3-composition-api.mdc`     | Composition API / Vite                           |
+| `rust-general.mdc`             | Idiomatic Rust (not Solana)                      |
+| `tailwind.mdc`                 | Utility CSS                                      |
+| `clean-code.mdc`               | Naming, SRP, DRY                                 |
+| `git-conventional-commits.mdc` | Conventional Commits                             |
 
 ## How to add another rule
 

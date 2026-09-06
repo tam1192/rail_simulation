@@ -1,23 +1,21 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router"; 
+import {
+    createRouter,
+    createWebHistory,
+    type RouteRecordRaw,
+} from "vue-router";
 
-export const routes = [
+export const routes: RouteRecordRaw[] = [
     {
         path: "/",
         name: "RailSimulation",
-        component: async () => {
-            const rs = await import("../pages/RailSimulation.vue");
-            return rs;
-        },
+        component: () => import("../pages/RailSimulation.vue"),
     },
     {
         path: "/bs",
         name: "BinarySearch",
-        component: async () => {
-            const bs = await import("../pages/BinarySearch.vue");
-            return bs;
-        },
-    }
-]
+        component: () => import("../pages/BinarySearch.vue"),
+    },
+];
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),

@@ -8,7 +8,8 @@ alwaysApply: true
 - Vite + Vue 3 (`<script setup>`) + TypeScript + Tailwind v4 + Rust compiled with `wasm-pack`
 - Vue is the delivery layer: params, playback, status text, routing, theme
 - Domain and simulation steps live in `wasm/` (Rust). Do not reimplement them in Vue
-- Draw through `GraphicsEngine`; do not add new Canvas 2D calls inside use-case structs
+- WASM layers: `domain/` (pure state), `render/` (colors + GraphicsEngine), `adapters/` (wasm_bindgen), `canvas_graphics_engine.rs` (Canvas only)
+- Draw through `GraphicsEngine`; do not add Canvas 2D calls inside domain or adapters beyond constructing the engine
 - Theme tokens (`brand`, `surface-*`, `content-*`) for UI chrome. Algorithm pointer colors may stay explicit
 - Pages go in `src/pages/`, composables in `src/composables/`, routes in `src/router/`
 - Add a simulation as a WASM type + a Vue page + a router entry. Do not create a new app shell

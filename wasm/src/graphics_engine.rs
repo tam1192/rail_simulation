@@ -1,27 +1,14 @@
 use crate::types::Point;
 
-/// 描画エンジンが満たすべき契約（Trait）
+/// Drawing port. Domain and use cases depend on this, not on Canvas.
 pub trait GraphicsEngine {
-    /// 画面全体をクリアする
     fn clear(&mut self);
+    fn size(&self) -> (f64, f64);
 
-    #[warn(unused)]
-    /// グリッドを描画する
-    fn draw_grid(&mut self, step: f64, color: &str);
-
-    /// 連続した線を描画する
     fn draw_path(&mut self, points: &[Point], stroke_color: &str, line_width: f64);
-
-    /// 複数の点を描画する
     fn draw_dots(&mut self, points: &[Point], radius: f64, fill_color: &str);
-
-    /// 円を描画する
     fn draw_circle(&mut self, center: Point, radius: f64, fill_color: &str);
-
-    /// 線を描画する (is_dashed は Option<bool> で表現)
     fn draw_line(&mut self, from: Point, to: Point, color: &str, is_dashed: Option<bool>);
-
-    /// 回転した矩形を描画する
     fn draw_rotated_rect(
         &mut self,
         center: Point,
@@ -31,4 +18,6 @@ pub trait GraphicsEngine {
         fill_color: &str,
         stroke_color: &str,
     );
+    fn fill_rect(&mut self, x: f64, y: f64, width: f64, height: f64, fill_color: &str);
+    fn draw_text(&mut self, text: &str, x: f64, y: f64, color: &str, font: &str);
 }

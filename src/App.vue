@@ -7,7 +7,3 @@ import "./main.css";
     <HeaderComponent />
     <RouterView />
 </template>
-
-<style>
-@import "tailwindcss";
-</style>
