@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from "vue";
 import { initWasm, RailSimulation, type DebugInfo } from "../wasm";
+import FormulaPanel from "../components/FormulaPanel.vue";
 
 type SimParams = {
     useCorrection: boolean;
@@ -142,5 +143,6 @@ onUnmounted(() => {
                 ※補正OFF：曲率の大きいカーブ通過時に台車間隔（弦長）が縮む様子が確認できます
             </p>
         </div>
+        <FormulaPanel :trace="debugInfo?.formula_trace ?? ''" />
     </div>
 </template>

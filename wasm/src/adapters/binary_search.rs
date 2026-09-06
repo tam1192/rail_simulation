@@ -1,5 +1,6 @@
 use crate::canvas_graphics_engine::CanvasGraphicsEngine;
 use crate::domain::binary_search::BinarySearchState;
+use crate::domain::formula::join_trace;
 use crate::render::binary_search::render_binary_search;
 use wasm_bindgen::prelude::*;
 use web_sys::HtmlCanvasElement;
@@ -19,6 +20,7 @@ pub struct SearchStatus {
 pub struct BinarySearch {
     engine: CanvasGraphicsEngine,
     state: BinarySearchState,
+    last_trace: String,
 }
 
 #[wasm_bindgen]
@@ -32,7 +34,15 @@ impl BinarySearch {
         let engine =
             CanvasGraphicsEngine::new(canvas).map_err(|e| JsValue::from_str(&format!("{e:#}")))?;
         let state = BinarySearchState::new(array_size, target);
-        let mut instance = Self { engine, state };
+        let formula_trace = format!(
+            "初期区間\nl = 0\nh = {}\nt = {target}",
+            array_size.saturating_sub(1)
+        );
+        let mut instance = Self {
+            engine,
+            state,
+            last_trace: formula_trace,
+        };
         instance.paint();
         Ok(instance)
     }
@@ -40,14 +50,24 @@ impl BinarySearch {
     #[wasm_bindgen]
     pub fn reset(&mut self, array_size: usize, target: i32) {
         self.state.reset(array_size, target);
+        self.last_trace = format!(
+            "初期区間\nl = 0\nh = {}\nt = {target}",
+            array_size.saturating_sub(1)
+        );
         self.paint();
     }
 
     #[wasm_bindgen]
     pub fn step(&mut self) -> SearchStatus {
-        self.state.step();
+        let trace = self.state.step();
+        self.last_trace = join_trace(&trace);
         self.paint();
         self.get_status()
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn formula_trace(&self) -> String {
+        self.last_trace.clone()
     }
 
     #[wasm_bindgen]

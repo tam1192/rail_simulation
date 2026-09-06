@@ -1,5 +1,6 @@
 use std::f64::consts::PI;
 
+use crate::domain::formula::{num, FormulaTrace};
 use crate::types::Point;
 
 const LOOP_RESET_DISTANCE: f64 = 80.0;
@@ -62,24 +63,48 @@ impl Track {
 
     /// Chord-length correction: binary search for a rear distance whose
     /// Euclidean distance to the front point equals `length`.
-    pub fn find_rear_distance(&self, d_front: f64, length: f64) -> f64 {
+    pub fn find_rear_distance(&self, d_front: f64, length: f64) -> (f64, FormulaTrace) {
         let p_front = self.point_at(d_front);
         let mut low = (d_front - length * 1.8).max(0.0);
         let mut high = d_front;
+        let mut last_mid = low;
+        let mut last_dist = 0.0;
 
         for _ in 0..15 {
-            let mid = (low + high) / 2.0;
-            let p_mid = self.point_at(mid);
-            let dist = (p_front.x - p_mid.x).hypot(p_front.y - p_mid.y);
+            last_mid = (low + high) / 2.0;
+            let p_mid = self.point_at(last_mid);
+            last_dist = (p_front.x - p_mid.x).hypot(p_front.y - p_mid.y);
 
-            if dist < length {
-                high = mid;
+            if last_dist < length {
+                high = last_mid;
             } else {
-                low = mid;
+                low = last_mid;
             }
         }
 
-        (low + high) / 2.0
+        let d_rear = (low + high) / 2.0;
+        let trace = vec![
+            "|P(d_f) − P(d_r)| = L  となる d_r を二分探索".to_string(),
+            format!(
+                "d_r ∈ [d_f − 1.8L, d_f] = [{}, {}]",
+                num((d_front - length * 1.8).max(0.0)),
+                num(d_front)
+            ),
+            format!(
+                "15回目: mid = (low + high) / 2 = ({low} + {high}) / 2 = {mid}",
+                low = num(low),
+                high = num(high),
+                mid = num(last_mid)
+            ),
+            format!(
+                "|P(d_f) − P(mid)| = {}  {}  L = {}",
+                num(last_dist),
+                if last_dist < length { "<" } else { "≥" },
+                num(length)
+            ),
+            format!("d_r = {}", num(d_rear)),
+        ];
+        (d_rear, trace)
     }
 }
 
@@ -103,14 +128,62 @@ impl RailState {
         }
     }
 
-    pub fn bogie_points(&self, use_correction: bool, bogie_pitch: f64) -> (Point, Point) {
+    pub fn bogie_points(
+        &self,
+        use_correction: bool,
+        bogie_pitch: f64,
+    ) -> (Point, Point, FormulaTrace) {
         let p_front = self.track.point_at(self.d_front);
+        let mut trace = vec![
+            format!("d_f = {}", num(self.d_front)),
+            format!("L = {}", num(bogie_pitch)),
+        ];
+
         let p_rear = if use_correction {
-            let d_rear = self.track.find_rear_distance(self.d_front, bogie_pitch);
+            let (d_rear, search_trace) = self.track.find_rear_distance(self.d_front, bogie_pitch);
+            trace.extend(search_trace);
             self.track.point_at(d_rear)
         } else {
-            self.track.point_at(self.d_front - bogie_pitch)
+            let d_rear = self.d_front - bogie_pitch;
+            trace.push("補正OFF: 弧長をそのまま引く".to_string());
+            trace.push("d_r = d_f − L".to_string());
+            trace.push(format!(
+                "    = {} − {} = {}",
+                num(self.d_front),
+                num(bogie_pitch),
+                num(d_rear)
+            ));
+            self.track.point_at(d_rear)
         };
-        (p_front, p_rear)
+
+        let dx = p_front.x - p_rear.x;
+        let dy = p_front.y - p_rear.y;
+        let chord = dx.hypot(dy);
+        trace.push("c = |P(d_f) − P(d_r)|".to_string());
+        trace.push("  = √((x_f − x_r)² + (y_f − y_r)²)".to_string());
+        trace.push(format!(
+            "  = √(({} − {})² + ({} − {})²)",
+            num(p_front.x),
+            num(p_rear.x),
+            num(p_front.y),
+            num(p_rear.y)
+        ));
+        trace.push(format!(
+            "  = √({} + {}) = {}",
+            num(dx * dx),
+            num(dy * dy),
+            num(chord)
+        ));
+        if use_correction {
+            trace.push(format!("c ≈ L ({})", num(bogie_pitch)));
+        } else {
+            trace.push(format!(
+                "c ≟ L → {} ≟ {}  （カーブでは弦が弧より短い）",
+                num(chord),
+                num(bogie_pitch)
+            ));
+        }
+
+        (p_front, p_rear, trace)
     }
 }

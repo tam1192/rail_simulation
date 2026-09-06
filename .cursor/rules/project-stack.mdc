@@ -12,7 +12,7 @@ alwaysApply: true
 - Draw through `GraphicsEngine`; do not add Canvas 2D calls inside domain or adapters beyond constructing the engine
 - Theme tokens (`brand`, `surface-*`, `content-*`) for UI chrome. Algorithm pointer colors may stay explicit
 - Pages go in `src/pages/`, composables in `src/composables/`, routes in `src/router/`
-- Add a simulation as a WASM type + a Vue page + a router entry. Do not create a new app shell
+- Formula traces are produced in `domain/` and shown by Vue; do not re-derive equations in the page
 
 ## Ignore from catalog rules unless the user asks
 

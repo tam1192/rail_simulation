@@ -29,30 +29,49 @@ impl BinarySearchState {
         *self = Self::new(array_size, target);
     }
 
-    pub fn step(&mut self) {
+    pub fn step(&mut self) -> crate::domain::formula::FormulaTrace {
         if self.is_finished || self.data.is_empty() || self.low > self.high {
             self.is_finished = true;
-            return;
+            return vec!["探索終了 (l > h または完了済み)".to_string()];
         }
 
+        let low = self.low;
+        let high = self.high;
         self.step += 1;
         self.mid = self.low + (self.high - self.low) / 2;
         let mid_val = self.data[self.mid];
+        let mut trace = vec![
+            "m = l + ⌊(h − l) / 2⌋".to_string(),
+            format!("  = {low} + ⌊({high} − {low}) / 2⌋ = {}", self.mid),
+            format!("a[m] = a[{}] = {}", self.mid, mid_val),
+            format!("t = {}", self.target),
+        ];
 
         if mid_val == self.target {
             self.is_found = true;
             self.is_finished = true;
+            trace.push(format!("{mid_val} = t  ⇒  発見 (index = {})", self.mid));
         } else if mid_val < self.target {
+            trace.push(format!("{mid_val} < t"));
             if self.mid >= self.high {
                 self.is_finished = true;
+                trace.push("m ≥ h  ⇒  未発見".to_string());
             } else {
                 self.low = self.mid + 1;
+                trace.push(format!("⇒ l = m + 1 = {}", self.low));
             }
-        } else if self.mid == 0 || self.mid - 1 < self.low {
-            self.is_finished = true;
         } else {
-            self.high = self.mid - 1;
+            trace.push(format!("{mid_val} > t"));
+            if self.mid == 0 || self.mid - 1 < self.low {
+                self.is_finished = true;
+                trace.push("m = 0 または m − 1 < l  ⇒  未発見".to_string());
+            } else {
+                self.high = self.mid - 1;
+                trace.push(format!("⇒ h = m − 1 = {}", self.high));
+            }
         }
+
+        trace
     }
 }
 

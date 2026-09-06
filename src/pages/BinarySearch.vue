@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from "vue";
 import { initWasm, BinarySearch } from "../wasm";
+import FormulaPanel from "../components/FormulaPanel.vue";
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const searchInstance = ref<BinarySearch | null>(null);
@@ -19,6 +20,7 @@ const visualizerState = reactive({
     lowIndex: -1,
     midIndex: -1,
     highIndex: -1,
+    formulaTrace: "",
     message:
         "探索目標と要素数を設定して「自動再生」または「コマ送り」を押してください",
 });
@@ -32,6 +34,7 @@ function syncStatus() {
     visualizerState.lowIndex = status.low;
     visualizerState.midIndex = status.mid;
     visualizerState.highIndex = status.high;
+    visualizerState.formulaTrace = instance.formula_trace;
 
     if (status.is_found) {
         visualizerState.status = "found";
@@ -66,6 +69,7 @@ function handleReset() {
     visualizerState.lowIndex = -1;
     visualizerState.midIndex = -1;
     visualizerState.highIndex = -1;
+    visualizerState.formulaTrace = searchInstance.value.formula_trace;
     visualizerState.message = "リセットしました。";
 }
 
@@ -118,6 +122,7 @@ onMounted(async () => {
         params.arraySize,
         params.targetValue
     );
+    visualizerState.formulaTrace = searchInstance.value.formula_trace;
 });
 
 onUnmounted(() => {
@@ -282,5 +287,6 @@ onUnmounted(() => {
                 💡 {{ visualizerState.message }}
             </div>
         </div>
+        <FormulaPanel :trace="visualizerState.formulaTrace" />
     </div>
 </template>
