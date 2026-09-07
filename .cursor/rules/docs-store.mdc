@@ -11,7 +11,7 @@ alwaysApply: true
 
 - Path: `/home/ubuntu/docs`
 - Entry: `/home/ubuntu/docs/資料.md`
-- Tailnet URL: http://100.91.105.80:8787/
+- Tailnet URL: https://sandbox-nikki-cursor.tail445dc.ts.net/
 
 ## Required behavior
 
