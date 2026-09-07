@@ -1,27 +1,27 @@
 ---
-description: Mandate consulting the machine docs store at /home/ubuntu/docs before work
+description: Consult the sandbox MkDocs store at /home/ubuntu/docs before changing this simulation repo
 alwaysApply: true
 ---
 
-# Docs store (必須参照)
+# Docs store（このリポジトリ向け）
 
-この Private Worker には共有資料置き場（MkDocs）がある。推測で進めず、必ず参照する。
+`sandbox-nikki-cursor` の共有資料は MkDocs。鉄道シミュの方針や層の話はチャットだけで完結させない。
 
 ## Location
 
-- Project: `/home/ubuntu/docs`
-- Entry: `/home/ubuntu/docs/docs/資料.md`（`index.md` と同一）
-- Tailnet URL: https://sandbox-nikki-cursor.tail445dc.ts.net/
+- `/home/ubuntu/docs/docs/資料.md`（入口。`index.md` と同一）
+- 詳細: `/home/ubuntu/docs/docs/notes/`
+- 閲覧: https://sandbox-nikki-cursor.tail445dc.ts.net/
 
-## Required behavior
+## Required
 
-1. タスク開始時に `/home/ubuntu/docs/docs/資料.md` を読む
-2. 関連テーマがあれば `/home/ubuntu/docs/docs/notes/` も確認する
-3. 環境・運用・方針の決定や再利用すべきメモは、チャットだけで終わらせず `/home/ubuntu/docs/docs` に書く
-4. 新規メモは `notes/YYYY-MM-DD-短い題名.md` を推奨し、必要なら `mkdocs.yml` の nav に追加する
-5. 資料と矛盾する作業をする場合は、先に資料を更新するか、矛盾点を明示する
+1. 作業前に `資料.md` を読む。関連 notes があればそれも読む
+2. 設計・環境・「なぜこう分けたか」は `notes/YYYY-MM-DD-短い題名.md` に残す
+3. このリポジトリのコード方針は `domain/` / `render/` / `adapters/` と途中式パネル。資料と食い違う変更は、先に notes を直すか矛盾を書く
+4. `mkdocs.yml` の nav に新しいメモを足す
 
 ## Do not
 
-- 資料置き場の存在を無視して環境や方針を再発明しない
-- 秘密情報（token / password / private key）を docs に書かない
+- 資料置き場を無視して Tailscale や docs 構成を再発明しない
+- token / password / private key を docs に書かない
+- 計算式の意味を Vue だけで再実装しない（途中式は WASM domain が出す）
