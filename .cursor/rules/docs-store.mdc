@@ -1,0 +1,27 @@
+---
+description: Mandate consulting the machine docs store at /home/ubuntu/docs before work
+alwaysApply: true
+---
+
+# Docs store (必須参照)
+
+この Private Worker には共有資料置き場がある。推測で進めず、必ず参照する。
+
+## Location
+
+- Path: `/home/ubuntu/docs`
+- Entry: `/home/ubuntu/docs/資料.md`
+- Tailnet URL: http://100.91.105.80:8787/
+
+## Required behavior
+
+1. タスク開始時に `/home/ubuntu/docs/資料.md` を読む
+2. 関連テーマがあれば `/home/ubuntu/docs/notes/` も確認する
+3. 環境・運用・方針の決定や再利用すべきメモは、チャットだけで終わらせず `/home/ubuntu/docs` に書く
+4. 新規メモは `notes/YYYY-MM-DD-短い題名.md` を推奨
+5. 資料と矛盾する作業をする場合は、先に資料を更新するか、矛盾点を明示する
+
+## Do not
+
+- 資料置き場の存在を無視して環境や方針を再発明しない
+- 秘密情報（token / password / private key）を docs に書かない
